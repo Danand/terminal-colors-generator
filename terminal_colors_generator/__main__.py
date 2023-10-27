@@ -1,7 +1,6 @@
-from sys import stderr, stdin, argv
-from operator import xor
+from sys import stdin, argv
 from json import load, dumps
-from argparse import ArgumentError, ArgumentParser
+from argparse import ArgumentParser
 from typing import Dict
 
 from .generator import generate
@@ -25,20 +24,6 @@ argument_parser.add_argument(
 )
 
 argument_parser.add_argument(
-    '--background',
-    type=str,
-    help='Color which considered to be background for readability correction',
-    required=False
-)
-
-argument_parser.add_argument(
-    '--accent',
-    type=str,
-    help='Color which not be altered for readability correction',
-    required=False
-)
-
-argument_parser.add_argument(
     '--export',
     help='Outputs Bash variable exports.',
     action='store_true'
@@ -51,16 +36,9 @@ colors: Dict[str, str] = load(stdin)
 color_from: str = args.color_from
 color_to: str = args.color_to
 
-background: str = args.background
-accent: str = args.accent
 export: bool = args.export
 
-if xor(background is not None, accent is not None):
-    raise ArgumentError(None, "Both `--background` and `--accent` must be specified")
-else:
-    print("warning: Readability correction may take a while, please wait...", file=stderr)
-
-result = generate(colors, color_from, color_to, background, accent)
+result = generate(colors, color_from, color_to)
 
 if export:
     print(f"export TERMINAL_THEME_NAME=\"{result['name']}\"")
@@ -87,4 +65,3 @@ if export:
 else:
     result_json = dumps(result, indent=2)
     print(result_json)
-

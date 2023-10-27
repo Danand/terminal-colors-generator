@@ -9,8 +9,6 @@ def generate(
         colors_dict: Dict[str, str],
         color_from: str,
         color_to: str,
-        color_background: str | None,
-        color_accent: str | None,
     ) -> Dict[str, str]:
     hex_colors: List[ColorBase] = []
     not_parsed: List[str] = []
@@ -26,12 +24,7 @@ def generate(
 
     wheel = Wheel.create_from_hex(hex_colors)
 
-    colors_rotated: List[str] | None = None
-
-    if color_background is not None and color_accent is not None:
-        colors_rotated = wheel.rotate_readable_from_to_hex(color_from, color_to, color_background, color_accent)
-    else:
-        colors_rotated = wheel.rotate_from_to_hex(color_from, color_to)
+    colors_rotated = wheel.rotate_from_to_hex(color_from, color_to)
 
     colors_dict_result: Dict[str, str] = {}
 
